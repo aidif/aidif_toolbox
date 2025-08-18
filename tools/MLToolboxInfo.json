@@ -1,0 +1,14 @@
+{
+    "Namespace" : "AIDIF",
+    "ToolboxOptions": {
+        "Identifier": "18ea00f1-735e-4c3d-9c64-2baea50f247a",
+        "ToolboxName": "AIDIF Matlab Toolbox",
+        "AuthorName": "Lane Desborough",
+        "AuthorEmail": "lane@aidif.org",
+        "AuthorCompany": "aidif.org",
+        "Summary": "Credible Set of Models to perform pre-clinical evaluation of AID systems and their components.",
+        "Description": "A comprehensive set of validated models and tools to perform pre-clincial evaluation for AID systems and components  - physiological models - disturbance and noise models - parameter distributions - sensitivity analysis - credibility frameworks - outcome measures and performance metrics - summary reports - simulink components",
+        "MinimumMatlabRelease": "R2019b",
+        "MaximumMatlabRelease": ""
+    }
+}
