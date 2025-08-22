@@ -9,5 +9,3 @@ dti=(ceil(min(dt)*24*60/5):floor(max(dt)*24*60/5))'/(24*60/5);
 deliveryi=interp1(dt,delivery,dti,"linear");
 U=diff(deliveryi)*24;
 U=[U;U(end)];
-%[dt br];
-%[dti U];
