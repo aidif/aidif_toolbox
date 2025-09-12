@@ -47,6 +47,6 @@ jobs:
       - name: Codespell
         uses: codespell-project/actions-codespell@v2
         with:
-          skip: "${{ SKIP }}"
-          ignore_words_list: "${{ IGNORE_WORDS_LIST }}"
+          skip: $SKIP
+          ignore_words_list: $IGNORE_WORDS_LIST
           verbose: true
