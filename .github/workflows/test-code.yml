@@ -44,3 +44,22 @@ jobs:
       # matlab_products: >
       #   Image_Processing_Toolbox
       #   Statistics_and_Machine_Learning_Toolbox
+  
+  coverage-summary:
+    name: Coverage summary
+    runs-on: ubuntu-latest
+    needs: test-code
+    steps:
+      - name: Get coverage artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: reports
+          path: reports
+    
+      - name: Generate coverage summary
+        uses: irongut/CodeCoverageSummary@v1.3.0
+        with:
+          filename: reports/codecoverage.xml
+          badge: true
+          format: markdown
+          output: both
