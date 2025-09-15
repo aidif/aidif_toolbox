@@ -64,6 +64,7 @@ jobs:
           format: markdown
           output: both
           thresholds: '50 75'
+          fail_below_min: 'true'
           
       - name: Persist coverage summary
         uses: actions/upload-artifact@v4
