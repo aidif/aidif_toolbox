@@ -1,4 +1,4 @@
-name: Test code
+name: Test Code New
 
 on:
   push:
@@ -40,7 +40,7 @@ env:
 jobs:
   test-code:
     if: github.run_number > 1
-    name: Analyse and test code
+    name: Analyse and test code new
     runs-on: ubuntu-latest
 
     steps:
