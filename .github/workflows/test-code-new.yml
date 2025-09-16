@@ -107,13 +107,20 @@ jobs:
         with:
           name: reports
           path: ${{ env.REPORTS_DIR }}
+      
+      - name: Save coverage summary
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+            name: code-coverage-summary
+            path: code-coverage-results.md
 
       - name: Post coverage summary as PR Comment
         uses: marocchino/sticky-pull-request-comment@v2
         if: github.event_name == 'pull_request'
         with:
           recreate: true
-          path: ${{ env.REPORTS_DIR }}/code-coverage-results.md
+          path: code-coverage-results.md
       
       - name: Fail if coverage is too low
         if: steps.coverage.outcome == 'failure'
