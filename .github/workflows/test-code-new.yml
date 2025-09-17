@@ -94,7 +94,7 @@ jobs:
             else
               files = dir(fullfile('${{ env.SRC_DIR }}', '**', '*.m'));
               fileList = string(fullfile({files.folder}, {files.name}));
-              exclude = ["Contents.m", "gettingStarted.m", "toolboxversion.m"];
+              exclude = ["Contents.m", "gettingStarted.m", "toolboxversion.m", "toolboxdir.m"];
               fileList = fileList(~ismember(string({files.name}), exclude));
               
               matbox.tasks.testToolbox(pwd, ...
