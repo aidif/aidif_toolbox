@@ -23,20 +23,19 @@ env:
       SRC_DIR: src      
       # Path to directory with (CI) tools or tests. Used for finding unit tests
       TOOLS_DIR: tools
+      TESTS_DIR: tests
       # Name of MATLAB Release to use for running test suites and code analysis
       MATLAB_RELEASE: latest
       # Whether to cache the MATLAB installation for faster subsequent setups
-      matlab_use_cache: false
-      #
-      TESTS_DIR: tests
-      REPORTS_DIR: docs/reports
       CACHE_MATLAB: true
       # Optional list of MATLAB products to install. Example if adding multiple 
       # products (use ">" and one product per line):
       # matlab_products: >
       #   Image_Processing_Toolbox
       #   Statistics_and_Machine_Learning_Toolbox
-
+    
+      REPORTS_DIR: docs/reports
+      
 jobs:
   test-code:
     if: github.run_number > 1
@@ -56,8 +55,32 @@ jobs:
       - name: Install MatBox
         uses: ehennestad/matbox-actions/install-matbox@v1
 
+      - name: Check Code for MATLAB issues
+      # This performs static checks
+      # Creates a "code issues" SVG badge
+        uses: matlab-actions/run-command@v2
+        if: always()
+        with:
+            command: |
+                addpath(genpath("${{ env.TOOLS_DIR }}"));
+                if exist("codecheckToolbox", "file")
+                    codecheckToolbox();
+                else
+                    matbox.tasks.codecheckToolbox(pwd, ...
+                    "FoldersToCheck", "${{ env.SRC_DIR }}");
+                end
+
+      - name: Upload Code Check SARIF Report to github
+        uses: github/codeql-action/upload-sarif@v3
+        continue-on-error: true # Will fail for MATLAB release < R2023a
+        with:
+            sarif_file: docs/reports/code_issues.sarif
+
+
+      
       - name: Run MATLAB test suites
       # This performs unit testing and test coverage using MatBox
+      # Creates a "tests" SVG badge
         uses: matlab-actions/run-command@v2
         with:
           command: |
@@ -82,13 +105,13 @@ jobs:
           check_name: Test Results
           files: ${{ env.REPORTS_DIR }}/**/test-results.xml
     
-      - name: Commit SVG badges if updated
-        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
-        uses: ehennestad/matbox-actions/push-badges@v1
+      - name: Save test results artifact
+        uses: actions/upload-artifact@v4
+        if: always()
         with:
-          pr-ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || github.ref_name }}
-          pr-repo: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name || github.repository }}
-  
+          name: reports
+          path: ${{ env.REPORTS_DIR }}
+
       - name: Generate coverage summary
         id: coverage
         uses: irongut/CodeCoverageSummary@v1.3.0
@@ -100,15 +123,8 @@ jobs:
           thresholds: '50 75'
           fail_below_min: 'true'
         continue-on-error: true
-
-      - name: Save artifacts
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: reports
-          path: ${{ env.REPORTS_DIR }}
       
-      - name: Save coverage summary
+      - name: Save coverage summary artifact
         uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -121,6 +137,15 @@ jobs:
         with:
           recreate: true
           path: code-coverage-results.md
+
+
+      - name: Commit SVG badges if updated
+        # "code issues" and "tests" SVG badges
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        uses: ehennestad/matbox-actions/push-badges@v1
+        with:
+          pr-ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || github.ref_name }}
+          pr-repo: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name || github.repository }}
       
       - name: Fail if coverage is too low
         if: steps.coverage.outcome == 'failure'
