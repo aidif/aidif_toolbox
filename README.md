@@ -6,8 +6,6 @@
 [![Run Codespell](https://github.com/aidif/aidif_toolbox/actions/workflows/run-codespell.yml/badge.svg)](https://github.com/aidif/aidif_toolbox/actions/workflows/run-codespell.yml)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://gitHub.com/aidif/aidif_toolbox/graphs/commit-activity)
 
-Intenschonal eror to be catchd by teh code spel.
-
 Credible Set of Models to perform pre-clinical evaluation of AID systems and their components.
 
 ## Description
